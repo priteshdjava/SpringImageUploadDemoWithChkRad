@@ -22,6 +22,9 @@ var customerinfo = {
     	        alert("My favourite sports are: " + bDocument.join(", "));
     	    });*/
     	var bName=$("#bName").val();
+    	
+    	
+    	
     	var	bGender=customerinfo.radioval();
     	var  bDocument=customerinfo.checkboxval();
     	var bAdd=$("#bAdd").val();
