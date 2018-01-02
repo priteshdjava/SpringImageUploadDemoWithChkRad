@@ -26,7 +26,7 @@ public class Customer {
 	private String cGender;
 
 	@Column(name = "cDocument")
-	private String[] cDocument;
+	private String cDocument;
 
 	public int getcId() {
 		return cId;
@@ -60,13 +60,14 @@ public class Customer {
 		this.cGender = cGender;
 	}
 
-	public String[] getcDocument() {
+	public String getcDocument() {
 		return cDocument;
 	}
 
-	public void setcDocument(String[] cDocument) {
+	public void setcDocument(String cDocument) {
 		this.cDocument = cDocument;
 	}
+
 
 	
 }

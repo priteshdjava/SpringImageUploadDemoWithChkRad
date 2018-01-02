@@ -1,5 +1,4 @@
 var bGender;
-var bDocument=new Array();
 var customerinfo = {
     init: function() { 
       //initial level functionality when load ...
@@ -7,7 +6,8 @@ var customerinfo = {
     },
     save: function() { 
         //add fetch data from form and set to grid..button add/edit click
-    	debugger;
+    	var bDocument=new Array();
+    /*	debugger;*/
     	/* $("input[type='button']").click(function(){
     		 bGender= $("input[name='bGender']:checked").val();
     		 alert("you are a :  ----"+bGender);
@@ -22,9 +22,6 @@ var customerinfo = {
     	        alert("My favourite sports are: " + bDocument.join(", "));
     	    });*/
     	var bName=$("#bName").val();
-    	
-    	
-    	
     	var	bGender=customerinfo.radioval();
     	var  bDocument=customerinfo.checkboxval();
     	var bAdd=$("#bAdd").val();
@@ -65,15 +62,35 @@ var customerinfo = {
     populate: function(objVal) {
         //its show data grid data
     },
-    validate: function() {
-        //form validation
+  image: function() {
+      //image upload  
+	  debugger;
+	  var path=$('input[type=file]').val();
+	  var form = document.forms[0];
+	 /* var file = $('[name="file"]');*/
+	  var formdata=new FormData();
+	  formdata.append("file",file.files[0]);
+	  alert(file);
+	  
+	  $.ajax({
+          url: 'upload',
+          type: "POST",
+          data: "path=" +path,
+          enctype: 'multipart/form-data',
+          success:function(data)
+          {
+        	  alert(success);
+          }
+          
+	  });
+	  
     },
     radioval:function()
     {
     	if(document.getElementById("bGender1").checked)
     	{
     		bGender=$("#bGender1").val();
-    		alert(bGender);
+    		/*alert(bGender);*/
     		return bGender;
     	}
     	else if(document.getElementById("bGender2").checked)
@@ -85,34 +102,23 @@ var customerinfo = {
     },
     checkboxval:function()
     {
-    	/*if(document.getElementById("bDocument1").checked)
-    	{
-    		bGender=$("#bDocument1").val();
-    		alert(bGender);
-    		return bGender;
-    	}
-    	else if(document.getElementById("bDocument2").checked)
-    		{
-		    		bGender=$("#bDocument2").val();
-		    		alert(bGender);
-		    		return bGender;
-    		}
-    	else if(document.getElementById("bDocument3").checked)
-		{
-	    		bGender=$("#bDocument3").val();
-	    		alert(bGender);
-	    		return bGender;
-		}*/
     	var checkbox=document.getElementsByName("bDocument");
     	var len=checkbox.length;
+    	/*alert(len);*/
+    	var bDocument=[];
     	for(var i=0;i<len;i++)
     		{
     				if(checkbox[i].checked)
     					{
-    						bDocument.push($("#checkbox["+i+"]").val());
+    						/*alert($(checkbox[i]).val());*/
+    						bDocument.push($(checkbox[i]).val());
+    						
     					}
     		}
+    	return bDocument;	
     }
+    
+    
     
 }
 

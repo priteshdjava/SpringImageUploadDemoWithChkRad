@@ -21,7 +21,7 @@
 	src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.1.47/jquery.form-validator.min.js"></script>
 </head>
 <body>
-			<form:form modelAttribute="form" id="myform">
+			<form:form modelAttribute="form" id="myform" enctype="multipart/form-data">
 					<table>
 						<tr>
 							<td><form:label path="bId"></form:label></td>
@@ -37,14 +37,19 @@
 									<form:radiobutton path="bGender" value="Female" label="Female"  /></td>
 						</tr>
 						<tr>
-							<td><form:label path="bDocument">Cutomer Document</form:label></td>
-							<td>		<form:checkbox path="bDocument" value="Aadhar Card"  label="Aadhar Card"></form:checkbox>
+							<td><form:label  path="bDocument">Cutomer Document</form:label></td>
+							<td>		<form:checkbox path="bDocument"  value="Aadhar Card"  label="Aadhar Card" ></form:checkbox>
 											<form:checkbox path="bDocument" value="PAN Card" label="PAN Card" ></form:checkbox>
 											<form:checkbox path="bDocument" value="Election Card"  label="Election Card"></form:checkbox></td>
 						</tr>
 						<tr>
 							<td><form:label path="bAdd">Comment</form:label></td>
 							<td><form:textarea path="bAdd" rows="5" cols="40"></form:textarea></td>
+						</tr>
+						<tr><!-- <td>Upload Image</td><td><input type="button" value="Upload Image"></td> -->
+									<!-- <td><label for="image">Choose Image</label></td> -->
+									<td><input name="file" id="file" type="file" /></td>
+									<td><input type="button" value="Upload Image" id="btnupload" onclick="customerinfo.image()"></td>
 						</tr>
 						<tr>
 									<td align="center" colspan="2"><input type="button" id="button" value="save" onclick="customerinfo.save()"></td>
