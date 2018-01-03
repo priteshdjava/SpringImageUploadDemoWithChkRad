@@ -27,6 +27,9 @@ public class Customer {
 
 	@Column(name = "cDocument")
 	private String cDocument;
+	
+	@Column(name="uploadImage")
+	private String cuploadImage;
 
 	public int getcId() {
 		return cId;
@@ -66,6 +69,14 @@ public class Customer {
 
 	public void setcDocument(String cDocument) {
 		this.cDocument = cDocument;
+	}
+
+	public String getCuploadImage() {
+		return cuploadImage;
+	}
+
+	public void setCuploadImage(String cuploadImage) {
+		this.cuploadImage = cuploadImage;
 	}
 
 

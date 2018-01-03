@@ -1,4 +1,5 @@
 var bGender;
+var imageFile;
 var customerinfo = {
     init: function() { 
       //initial level functionality when load ...
@@ -6,35 +7,9 @@ var customerinfo = {
     },
     save: function() { 
         //add fetch data from form and set to grid..button add/edit click
-    	var bDocument=new Array();
-    /*	debugger;*/
-    	/* $("input[type='button']").click(function(){
-    		 bGender= $("input[name='bGender']:checked").val();
-    		 alert("you are a :  ----"+bGender);
-    	 }); 
-    	  $("#button").click(function(){
-    	    	var bDocument=[];
-    	    	
-    	        $.each($("input[name='bDocument']:checked"), function(){            
-    	        	bDocument.push($(this).val());
-    	        	
-    	        });
-    	        alert("My favourite sports are: " + bDocument.join(", "));
-    	    });*/
-    	var bName=$("#bName").val();
-    	var	bGender=customerinfo.radioval();
-    	var  bDocument=customerinfo.checkboxval();
-    	var bAdd=$("#bAdd").val();
+    	debugger;
     	
-    	$.ajax({
-			type : "POST",
-			url : "save",
-			data : "bName=" + bName + "&bGender=" + bGender+ "&bDocument=" + bDocument + "&bAdd=" +bAdd,
-			success : function(data) {
-				alert("success");
-			}
-		});
-    	
+    	customerinfo.image();
     },
     edit: function(ele) { 
         //grid edit buttion click event...and set data to form
@@ -64,26 +39,46 @@ var customerinfo = {
     },
   image: function() {
       //image upload  
-	  debugger;
-	  var path=$('input[type=file]').val();
-	  var form = document.forms[0];
-	 /* var file = $('[name="file"]');*/
-	  var formdata=new FormData();
-	  formdata.append("file",file.files[0]);
-	  alert(file);
 	  
-	  $.ajax({
-          url: 'upload',
-          type: "POST",
-          data: "path=" +path,
-          enctype: 'multipart/form-data',
-          success:function(data)
-          {
-        	  alert(success);
-          }
-          
-	  });
-	  
+	  var files = [];
+	  var form = $('#form')[0];
+	  var oMyForm = new FormData(form);
+      oMyForm.append("CustomField","This is some extra field");
+     $
+        .ajax({
+        	/*dataType : 'json',*/
+            url : "upload",
+            data : oMyForm,
+            type : "POST",
+            enctype: 'multipart/form-data',
+            cache: false,
+          contentType: false,
+            processData: false,
+            
+            success : function(result) {
+            	imageFile=result;
+            	var bDocument=new Array();
+            	var bName=$("#bName").val();
+            	var	bGender=customerinfo.radioval();
+            	var  bDocument=customerinfo.checkboxval();
+            	var bAdd=$("#bAdd").val();
+            		
+            	
+            	/*var json=JSON.stringify(data);*/
+            	$.ajax({
+        			url : "save",
+        			type : "POST",
+        			enctype: 'multipart/form-data',
+        			data :"bName=" + bName + "&bGender=" + bGender+ "&bDocument=" + bDocument + "&bAdd=" +bAdd+ "&imageFile="+imageFile,
+        			success : function(data) {
+        				alert("success");
+        			}
+        		});
+            },
+            
+        });
+     /*$("#form")[0].reset();*/
+    
     },
     radioval:function()
     {
@@ -117,8 +112,6 @@ var customerinfo = {
     		}
     	return bDocument;	
     }
-    
-    
-    
 }
+
 
