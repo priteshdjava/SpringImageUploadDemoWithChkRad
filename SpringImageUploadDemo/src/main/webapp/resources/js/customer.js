@@ -26,54 +26,37 @@ var customerinfo = {
 			url : "view",
 			success : function(data) {
 				var obj=JSON.parse(data);
-			$("#listOfCutomer").empty();
-				var header="";
-				var cutomerlist="";
-				
-				header = "<tr>";
-				header += "<th colspan=7>Cutomer List </th>"
-				header += "</tr>";
-				header += "<tr>";
-				header += "<th> Cutomer ID </th>";
-				header += "<th> Cutomer Name </th>";
-				header += "<th> Cutomer Gender </th>";
-				header += "<th> Cutomer Document </th>";
-				header += "<th> Cutomer Comment </th>";
-				header += "<th> Cutomer Profile </th>";
-			/*	header += "<th colspan=2>Operation</th>";*/
-				
-				$("#listOfCutomer").append(header);
-				/*var path2=path+"/resources/Upload_Image";*/
-				/*alert(path2);*/
-				for(var i=0;i<obj.length;i++)
-					{
-					var tag="";
-					cutomerlist = "<tr>";
-					cutomerlist += "<td>" + obj[i].bId + "</td> ";
-					cutomerlist += "<td>" + obj[i].bName + "</td> ";
-					cutomerlist += "<td>" + obj[i].bGender + "</td> ";
-					cutomerlist += "<td>" + obj[i].bDocument + "</td> ";
-					cutomerlist += "<td>" + obj[i].bAdd + "</td> ";
-					/*cutomerlist += "<td> <img src=/SpringImageUploadDemo/resources/Upload_Image/"+obj[i].buploadImage+"/></td> "; */
-					cutomerlist += "<td> <img src="+appcontext+"/resources/Upload_Image/"+obj[i].buploadImage+"/></td> "; 
-						//+obj[i].buploadImage+" /></td> ";
-					/*cutomerlist += "<td>"+ <% out.write(request.getContextPath()); %>/resources/Upload_Image </td> ";
-*/					/*cutomerlist += "<td>" + obj[i].buploadImage + "</td> ";*/
-				/*	cutomerlist += "<td>" + "<a href=javascript:studentinfo.edit("
-							+ obj[i].id + ")>Edit</a>" + "</td>";
-					cutomerlist += "<td>" + "<a href=javascript:studentinfo.del("
-							+ obj[i].id + ")>Delete</a>" + "</td>";*/
-					cutomerlist += "</tr>";
-					$("#listOfCutomer").append(cutomerlist);
-					$("#listOfCutomer").append(tag);
-					
-					}
-				
+				customerinfo.showtable(obj);
 			}
     	});
     },
-    get: function(ele) { 
+    get: function(bId) { 
         //get record from grid...[ele means its delete or edit cell..]
+    	$
+		.ajax({
+
+			type : "POST",
+			url : "get",
+			data : "id=" + bId,
+			success : function(data) {
+				var obj = JSON.parse(data);
+				/*alert(obj);*/
+				var button = "";
+				/*alert("success");*/
+			/*	alert(obj.bName);*/
+				/*alert(obj.bGender);*/
+				$("#bId").val(obj.bId);
+				$("#bName").val(obj.bName);
+				$("#bGender1").val(obj.bGender).checked;
+				$("#bAdd").val(obj.bAdd);
+				button = "<tr>";
+				button += "<td align=justify><input type=button id=button2 value=Edit  onclick=studentinfo.saveEdit()></td>";
+				button += "</tr>";
+				$("#button").replaceWith(button);
+
+			}
+		});
+    	
     },
     clear: function(ele) { //reset form data
        
@@ -111,9 +94,6 @@ var customerinfo = {
             	var	bGender=customerinfo.radioval();
             	var  bDocument=customerinfo.checkboxval();
             	var bAdd=$("#bAdd").val();
-            		
-            	
-            	/*var json=JSON.stringify(data);*/
             	$.ajax({
         			url : "save",
         			type : "POST",
@@ -133,13 +113,11 @@ var customerinfo = {
     	if(document.getElementById("bGender1").checked)
     	{
     		bGender=$("#bGender1").val();
-    		/*alert(bGender);*/
     		return bGender;
     	}
     	else if(document.getElementById("bGender2").checked)
     		{
 		    		bGender=$("#bGender2").val();
-		    		/*alert(bGender);*/
 		    		return bGender;
     		}
     },
@@ -159,7 +137,45 @@ var customerinfo = {
     					}
     		}
     	return bDocument;	
-    }
+    },
+    showtable:function(obj)
+    {
+    	$("#listOfCutomer").empty();
+		var header="";
+		var cutomerlist="";
+		
+		header = "<tr>";
+		header += "<th colspan=7>Cutomer List </th>"
+		header += "</tr>";
+		header += "<tr>";
+		header += "<th> Cutomer ID </th>";
+		header += "<th> Cutomer Name </th>";
+		header += "<th> Cutomer Gender </th>";
+		header += "<th> Cutomer Document </th>";
+		header += "<th> Cutomer Comment </th>";
+		header += "<th> Cutomer Profile </th>";
+		header += "<th colspan=2>Operation</th>";
+		
+		$("#listOfCutomer").append(header);
+		for(var i=0;i<obj.length;i++)
+			{
+			var tag="";
+			cutomerlist = "<tr>";
+			cutomerlist += "<td>" + obj[i].bId + "</td> ";
+			cutomerlist += "<td>" + obj[i].bName + "</td> ";
+			cutomerlist += "<td>" + obj[i].bGender + "</td> ";
+			cutomerlist += "<td>" + obj[i].bDocument + "</td> ";
+			cutomerlist += "<td>" + obj[i].bAdd + "</td> ";
+			cutomerlist += "<td> <img src="+appcontext+"/resources/Upload_Image/"+obj[i].buploadImage+" height=42 width=42/></td> "; 
+			cutomerlist += "<td>" + "<a href=javascript:customerinfo.get("
+			+ obj[i].bId + ")>Edit</a>" + "</td>";
+			cutomerlist += "<td>" + "<a href=javascript:customerinfo.get("
+			+ obj[i].bId + ")>Delete</a>" + "</td>";
+			cutomerlist += "</tr>";
+			$("#listOfCutomer").append(cutomerlist);
+			$("#listOfCutomer").append(tag);
+			
+			}
+    	}
 }
-
 

@@ -28,6 +28,11 @@ public class CutomerDaoImpl implements CustomerDao{
 				return (List<Customer>)sessionFactory.getCurrentSession().createCriteria(Customer.class).list();
 				
 			}
+
+			public Customer getById(int cId) {
+				// TODO Auto-generated method stub
+				return (Customer)sessionFactory.getCurrentSession().get(Customer.class,	cId);
+			}
 	
 			
 }

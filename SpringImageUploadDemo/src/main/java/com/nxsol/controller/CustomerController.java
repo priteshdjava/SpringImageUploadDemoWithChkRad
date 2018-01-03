@@ -104,6 +104,21 @@ public class CustomerController {
 		String jsonstring=gson.toJson(cutomerlist);
 		return jsonstring;
 	}
+	@RequestMapping(value="/get",method=RequestMethod.POST)
+	@ResponseBody public String getById(@RequestParam("id")int bId) 
+	{
+		Gson gson=new Gson();
+		CustomerBean bean = new CustomerBean();
+		Customer customer= service.getById(bId);
+		bean.setbId(customer.getcId());
+		bean.setbName(customer.getcName());
+		bean.setbGender(customer.getcGender());
+		bean.setbDocument(customer.getcDocument());
+		bean.setbAdd(customer.getcAdd());
+		bean.setBuploadImage(customer.getCuploadImage());
+		String jsonInString = gson.toJson(bean);
+		return jsonInString;
+	}
 	
 	public List<CustomerBean> prepareBeanList(List<Customer> customers) {
 		CustomerBean customer = null;

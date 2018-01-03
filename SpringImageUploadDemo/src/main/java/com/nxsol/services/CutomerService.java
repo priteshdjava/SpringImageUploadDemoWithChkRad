@@ -12,4 +12,6 @@ public interface CutomerService {
 	
 	public List<Customer> getAllCutomer();
 	
+	public Customer getById(int cId);
+	
 }
