@@ -1,5 +1,7 @@
 package com.nxsol.dao;
 
+import java.util.List;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -18,6 +20,13 @@ public class CutomerDaoImpl implements CustomerDao{
 				// TODO Auto-generated method stub
 				
 				sessionFactory.getCurrentSession().saveOrUpdate(customer);
+			}
+
+			public List<Customer> getAllCutomer() {
+				// TODO Auto-generated method stub
+				
+				return (List<Customer>)sessionFactory.getCurrentSession().createCriteria(Customer.class).list();
+				
 			}
 	
 			

@@ -4,7 +4,9 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import javax.servlet.ServletException;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.google.gson.Gson;
 import com.nxsol.beans.CustomerBean;
 import com.nxsol.model.Customer;
 import com.nxsol.services.CustomerServiceImpl;
@@ -91,6 +94,33 @@ public class CustomerController {
 		}
 
 		return imageFile;
+	}
+	
+	@RequestMapping(value="/view",method=RequestMethod.GET)
+	@ResponseBody public String view()
+	{
+		Gson gson = new Gson();
+		List<CustomerBean> cutomerlist=prepareBeanList(service.getAllCutomer());
+		String jsonstring=gson.toJson(cutomerlist);
+		return jsonstring;
+	}
+	
+	public List<CustomerBean> prepareBeanList(List<Customer> customers) {
+		CustomerBean customer = null;
+		List<CustomerBean> beans = new ArrayList<CustomerBean>();
+		for (Customer std : customers) {
+			customer = new CustomerBean();
+			System.out.println(std.getcId());
+			customer.setbId(std.getcId());
+			customer.setbName(std.getcName());
+			customer.setbGender(std.getcGender());
+			customer.setbAdd(std.getcAdd());
+			customer.setbDocument(std.getcDocument());
+			customer.setBuploadImage(std.getCuploadImage());
+
+			beans.add(customer);
+		}
+		return beans;
 	}
 
 }

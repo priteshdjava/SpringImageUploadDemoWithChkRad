@@ -5,11 +5,10 @@ var customerinfo = {
       //initial level functionality when load ...
 
     },
-    save: function() { 
+    save: function(path) { 
         //add fetch data from form and set to grid..button add/edit click
-    	debugger;
-    	
     	customerinfo.image();
+    	customerinfo.set();
     },
     edit: function(ele) { 
         //grid edit buttion click event...and set data to form
@@ -19,9 +18,59 @@ var customerinfo = {
     remove: function(ele) {
         //delete data from grid ajax call
     },
-    set: function(obj) { 
+    set: function() { 
         //set record to grid...
+    	$.ajax({
 
+			type : "GET",
+			url : "view",
+			success : function(data) {
+				var obj=JSON.parse(data);
+			$("#listOfCutomer").empty();
+				var header="";
+				var cutomerlist="";
+				
+				header = "<tr>";
+				header += "<th colspan=7>Cutomer List </th>"
+				header += "</tr>";
+				header += "<tr>";
+				header += "<th> Cutomer ID </th>";
+				header += "<th> Cutomer Name </th>";
+				header += "<th> Cutomer Gender </th>";
+				header += "<th> Cutomer Document </th>";
+				header += "<th> Cutomer Comment </th>";
+				header += "<th> Cutomer Profile </th>";
+			/*	header += "<th colspan=2>Operation</th>";*/
+				
+				$("#listOfCutomer").append(header);
+				/*var path2=path+"/resources/Upload_Image";*/
+				/*alert(path2);*/
+				for(var i=0;i<obj.length;i++)
+					{
+					var tag="";
+					cutomerlist = "<tr>";
+					cutomerlist += "<td>" + obj[i].bId + "</td> ";
+					cutomerlist += "<td>" + obj[i].bName + "</td> ";
+					cutomerlist += "<td>" + obj[i].bGender + "</td> ";
+					cutomerlist += "<td>" + obj[i].bDocument + "</td> ";
+					cutomerlist += "<td>" + obj[i].bAdd + "</td> ";
+					/*cutomerlist += "<td> <img src=/SpringImageUploadDemo/resources/Upload_Image/"+obj[i].buploadImage+"/></td> "; */
+					cutomerlist += "<td> <img src="+appcontext+"/resources/Upload_Image/"+obj[i].buploadImage+"/></td> "; 
+						//+obj[i].buploadImage+" /></td> ";
+					/*cutomerlist += "<td>"+ <% out.write(request.getContextPath()); %>/resources/Upload_Image </td> ";
+*/					/*cutomerlist += "<td>" + obj[i].buploadImage + "</td> ";*/
+				/*	cutomerlist += "<td>" + "<a href=javascript:studentinfo.edit("
+							+ obj[i].id + ")>Edit</a>" + "</td>";
+					cutomerlist += "<td>" + "<a href=javascript:studentinfo.del("
+							+ obj[i].id + ")>Delete</a>" + "</td>";*/
+					cutomerlist += "</tr>";
+					$("#listOfCutomer").append(cutomerlist);
+					$("#listOfCutomer").append(tag);
+					
+					}
+				
+			}
+    	});
     },
     get: function(ele) { 
         //get record from grid...[ele means its delete or edit cell..]
@@ -75,10 +124,9 @@ var customerinfo = {
         			}
         		});
             },
-            
         });
      /*$("#form")[0].reset();*/
-    
+    /* customerinfo.set(obj);*/
     },
     radioval:function()
     {
@@ -91,7 +139,7 @@ var customerinfo = {
     	else if(document.getElementById("bGender2").checked)
     		{
 		    		bGender=$("#bGender2").val();
-		    		alert(bGender);
+		    		/*alert(bGender);*/
 		    		return bGender;
     		}
     },

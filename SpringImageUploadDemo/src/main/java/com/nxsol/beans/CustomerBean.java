@@ -6,7 +6,7 @@ public class CustomerBean {
 	private String bName;
 	private String bAdd;
 	private String bGender;
-	private String[] bDocument;
+	private String bDocument;
 	private String buploadImage;
 	public int getbId() {
 		return bId;
@@ -32,17 +32,18 @@ public class CustomerBean {
 	public void setbGender(String bGender) {
 		this.bGender = bGender;
 	}
-	public String[] getbDocument() {
-		return bDocument;
-	}
-	public void setbDocument(String[] bDocument) {
-		this.bDocument = bDocument;
-	}
+	
 	public String getBuploadImage() {
 		return buploadImage;
 	}
 	public void setBuploadImage(String buploadImage) {
 		this.buploadImage = buploadImage;
+	}
+	public String getbDocument() {
+		return bDocument;
+	}
+	public void setbDocument(String bDocument) {
+		this.bDocument = bDocument;
 	}
 	
 	
