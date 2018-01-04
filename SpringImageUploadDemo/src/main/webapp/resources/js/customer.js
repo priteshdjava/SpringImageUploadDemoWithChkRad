@@ -32,6 +32,7 @@ var customerinfo = {
     },
     get: function(bId) { 
         //get record from grid...[ele means its delete or edit cell..]
+    	debugger;
     	$
 		.ajax({
 
@@ -41,13 +42,37 @@ var customerinfo = {
 			success : function(data) {
 				var obj = JSON.parse(data);
 				/*alert(obj);*/
+				alert(obj.bDocument);
 				var button = "";
 				/*alert("success");*/
 			/*	alert(obj.bName);*/
 				/*alert(obj.bGender);*/
 				$("#bId").val(obj.bId);
 				$("#bName").val(obj.bName);
-				$("#bGender1").val(obj.bGender).checked;
+				
+				if(obj.bGender == 'Male'){
+				$("#bGender1").val(obj.bGender).prop("checked",true);
+				}else { 
+					$("#bGender2").val(obj.bGender).prop("checked",true);  
+					
+				}
+				var document=[];
+				var str=obj.bDocument;
+				document=str.split(",");
+				/*alert(document);*/
+				if(document[0] == 'Aadhar Card')
+					{
+							$("#bDocument1").val(document[0]).prop("checked",true);
+					}if(document[1] == 'PAN Card')
+						{
+							$("#bDocument2").val(document[1]).prop("checked",true);
+						}
+					if((document[2] == 'Election Card'))
+						{
+							$("#bDocument3").val(document[2]).prop("checked",true);
+						}
+					alert(obj.buploadImage);
+				$("#filed").val(obj.buploadImage);
 				$("#bAdd").val(obj.bAdd);
 				button = "<tr>";
 				button += "<td align=justify><input type=button id=button2 value=Edit  onclick=studentinfo.saveEdit()></td>";
