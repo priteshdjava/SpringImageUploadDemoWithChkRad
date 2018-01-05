@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -96,17 +97,18 @@ public class CustomerController {
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	@ResponseBody
-	public String upload(MultipartHttpServletRequest request) throws ServletException, IOException {
+	public String upload(MultipartHttpServletRequest request,HttpServletRequest httpReq) throws ServletException, IOException {
 		String imageFile = null;
 		Random rand = new Random();
 		File oldFile;
 
 		int random = rand.nextInt(100000);
 		String strRandom = String.valueOf(random);
-		String UPLOAD_DIRECTORY = "C:/Users/ADMIN/git/SpringImageUploadDemoWithChkRad/SpringImageUploadDemo/src/main/webapp/resources/Upload_Image";
+		System.out.println(httpReq.getContextPath()+"-------"+request.getRealPath("") + "Upload_Image");
+		
 		Iterator<String> itrator = request.getFileNames();
 		MultipartFile multiFile = request.getFile(itrator.next());
-
+		String UPLOAD_DIRECTORY = request.getRealPath("") + "resources/Upload_Image/";//request.getRealPath(httpReq.getContextPath()+"/src/main/webapp/resources/Upload_Image");
 		/* File directory = new File(UPLOAD_DIRECTORY); */
 		File file;
 		try {
