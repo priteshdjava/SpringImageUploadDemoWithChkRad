@@ -8,11 +8,10 @@ var customerinfo = {
     save: function(path) { 
         //add fetch data from form and set to grid..button add/edit click
     	customerinfo.image();
-    	customerinfo.set();
     },
-    edit: function(ele) { 
+    edit: function() { 
         //grid edit buttion click event...and set data to form
-
+    	customerinfo.editimage();
     },
     
     remove: function(ele) {
@@ -32,7 +31,7 @@ var customerinfo = {
     },
     get: function(bId) { 
         //get record from grid...[ele means its delete or edit cell..]
-    	debugger;
+    	/*debugger;*/
     	$
 		.ajax({
 
@@ -42,7 +41,7 @@ var customerinfo = {
 			success : function(data) {
 				var obj = JSON.parse(data);
 				/*alert(obj);*/
-				alert(obj.bDocument);
+				/*alert(obj.bDocument);*/
 				var button = "";
 				/*alert("success");*/
 			/*	alert(obj.bName);*/
@@ -71,11 +70,14 @@ var customerinfo = {
 						{
 							$("#bDocument3").val(document[2]).prop("checked",true);
 						}
+					$("#bAdd").val(obj.bAdd);
+					/*$("#filed")[0].reset();*/
+			/*var path2="C:/Users/ADMIN/git/SpringImageUploadDemoWithChkRad/SpringImageUploadDemo/src/main/webapp/resources/"+obj.buploadImage+" ";
+				alert(path2);
 					alert(obj.buploadImage);
-				$("#filed").val(obj.buploadImage);
-				$("#bAdd").val(obj.bAdd);
+				$("#buploadImage").val(path2);*/
 				button = "<tr>";
-				button += "<td align=justify><input type=button id=button2 value=Edit  onclick=studentinfo.saveEdit()></td>";
+				button += "<td align=justify><input type=button id=button2 value=Edit  onclick=customerinfo.edit()></td>";
 				button += "</tr>";
 				$("#button").replaceWith(button);
 
@@ -83,8 +85,17 @@ var customerinfo = {
 		});
     	
     },
-    clear: function(ele) { //reset form data
-       
+    Delete: function(bId) { //reset form data
+    	$.ajax({
+
+			type : "POST",
+			url : "delete",
+			data : "bId=" + bId,
+			success : function(data) {
+			/*	debugger;*/
+				customerinfo.set();
+			}
+		});
     },
    
     gather: function() {
@@ -126,13 +137,58 @@ var customerinfo = {
         			data :"bName=" + bName + "&bGender=" + bGender+ "&bDocument=" + bDocument + "&bAdd=" +bAdd+ "&imageFile="+imageFile,
         			success : function(data) {
         				alert("success");
+        				customerinfo.set();
+        				$("#form")[0].reset();
         			}
         		});
             },
         });
-     /*$("#form")[0].reset();*/
+     
     /* customerinfo.set(obj);*/
     },
+    editimage: function() {
+        //image upload  
+    	/*debugger;*/
+  	  var files = [];
+  	  var form = $('#form')[0];
+  	  var oMyForm = new FormData(form);
+        oMyForm.append("CustomField","This is some extra field");
+       $
+          .ajax({
+          	/*dataType : 'json',*/
+              url : "upload",
+              data : oMyForm,
+              type : "POST",
+              enctype: 'multipart/form-data',
+              cache: false,
+            contentType: false,
+              processData: false,
+              
+              success : function(result) {
+              	imageFile=result;
+              	var bDocument=new Array();
+              	var bId=$("#bId").val();
+              	var bName=$("#bName").val();
+              	var	bGender=customerinfo.radioval();
+              	var  bDocument=customerinfo.checkboxval();
+              	var bAdd=$("#bAdd").val();
+              	$.ajax({
+          			url : "edit",
+          			type : "POST",
+          			enctype: 'multipart/form-data',
+          			data :"bId="+bId + "&bName=" + bName + "&bGender=" + bGender+ "&bDocument=" + bDocument + "&bAdd=" +bAdd+ "&imageFile="+imageFile,
+          			success : function(data) {
+          				alert("success");
+          				 customerinfo.set();
+          				$("#form")[0].reset();
+          			}
+          		});
+              },
+          });
+      
+       /*$("#form")[0].reset();*/
+      /* customerinfo.set(obj);*/
+      },
     radioval:function()
     {
     	if(document.getElementById("bGender1").checked)
@@ -194,7 +250,7 @@ var customerinfo = {
 			cutomerlist += "<td> <img src="+appcontext+"/resources/Upload_Image/"+obj[i].buploadImage+" height=42 width=42/></td> "; 
 			cutomerlist += "<td>" + "<a href=javascript:customerinfo.get("
 			+ obj[i].bId + ")>Edit</a>" + "</td>";
-			cutomerlist += "<td>" + "<a href=javascript:customerinfo.get("
+			cutomerlist += "<td>" + "<a href=javascript:customerinfo.Delete("
 			+ obj[i].bId + ")>Delete</a>" + "</td>";
 			cutomerlist += "</tr>";
 			$("#listOfCutomer").append(cutomerlist);

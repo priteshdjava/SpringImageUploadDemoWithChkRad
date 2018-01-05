@@ -11,4 +11,10 @@ public interface CustomerDao {
 	public List<Customer> getAllCutomer();
 	
 	public Customer getById(int cId);
+	
+	public void updateCutomer(Customer cs,int bId);
+	
+	public void deleteStudent(int bId);
+	
+	public Customer getImageById(int cId);
 }

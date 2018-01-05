@@ -29,5 +29,25 @@ public class CustomerServiceImpl implements CutomerService{
 		// TODO Auto-generated method stub
 		return (Customer)dao.getById(cId);
 	}
+
+	public void updateCutomer(Customer cs, int bId) {
+		// TODO Auto-generated method stub
+		dao.updateCutomer(cs, bId);
+	}
+
+	public void deleteStudent(int bId) {
+		// TODO Auto-generated method stub
+		dao.deleteStudent(bId);
+	}
+
+	/*public List<Customer> getImageById(int bId) {
+		// TODO Auto-generated method stub
+		
+	}
+*/
+	public Customer getImageById(int cId) {
+		// TODO Auto-generated method stub
+		return (Customer)dao.getImageById(cId);
+	}
 	
 }

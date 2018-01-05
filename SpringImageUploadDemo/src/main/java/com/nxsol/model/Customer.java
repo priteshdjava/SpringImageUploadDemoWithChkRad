@@ -28,7 +28,7 @@ public class Customer {
 	@Column(name = "cDocument")
 	private String cDocument;
 	
-	@Column(name="uploadImage")
+	@Column(name="cuploadImage")
 	private String cuploadImage;
 
 	public int getcId() {

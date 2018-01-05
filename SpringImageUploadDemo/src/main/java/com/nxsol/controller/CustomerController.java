@@ -33,7 +33,7 @@ public class CustomerController {
 	@Autowired
 	private CustomerServiceImpl service;
 
-	
+	String oldImage=null;
 	@RequestMapping(value = "/form", method = RequestMethod.GET)
 	public String get(@ModelAttribute("form") CustomerBean customerbean) {
 		return "customerForm";
@@ -46,12 +46,10 @@ public class CustomerController {
 		String doc = "";
 		for (int i = 0; i < bDocument.length; i++) {
 			doc += bDocument[i];
-			for (int j = 0; j < (bDocument.length) - 1; j++) {
 				doc += ",";
-			}
+			
 			/* service.save(c); */
 		}
-		System.out.println("doc is------------------------------------------------------------" + doc);
 		c.setcDocument(doc);
 		c.setcName(bName);
 		c.setcGender(bGender);
@@ -60,40 +58,87 @@ public class CustomerController {
 		service.save(c);
 		return "redirect:form";
 	}
+	@RequestMapping(value="edit",method=RequestMethod.POST)
+	@ResponseBody public String editCustomer(@RequestParam("bId")int bId,@RequestParam("bName") String bName, @RequestParam("bGender") String bGender,
+			@RequestParam("bDocument") String[] bDocument, @RequestParam("bAdd") String bAdd,@RequestParam("imageFile")String imageFile)
+	{
+		String doc1 = "";
+		for (int i = 0; i < bDocument.length; i++) {
+			doc1 += bDocument[i];
+				doc1 += ",";
+		}
+		Customer cs=new Customer();
+		cs.setcName(bName);
+		cs.setcGender(bGender);
+		cs.setcDocument(doc1);
+		cs.setcAdd(bAdd);
+		cs.setCuploadImage(imageFile);
+		service.updateCutomer(cs, bId);
+		return "success";
+	}
+	
+	@RequestMapping(value="/delete",method=RequestMethod.POST)
+	@ResponseBody public String delete(@RequestParam("bId")int bId)
+	{
+		service.deleteStudent(bId);
+		return "success";
+	}
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	@ResponseBody
 	public String upload(MultipartHttpServletRequest request) throws ServletException, IOException {
 		  String  imageFile = null;
 		Random rand = new Random();
+		File oldFile;
+		
 		int random=rand.nextInt(100000);
 		String strRandom=String.valueOf(random);
 		String UPLOAD_DIRECTORY = "C:/Users/ADMIN/git/SpringImageUploadDemoWithChkRad/SpringImageUploadDemo/src/main/webapp/resources/Upload_Image";
 		Iterator<String> itrator = request.getFileNames();
 		MultipartFile multiFile = request.getFile(itrator.next());
+		
+		File directory = new File(UPLOAD_DIRECTORY);
+		File file;
 		try {
 			// just to show that we have actually received the file
-			System.out.println("File Length:" + multiFile.getBytes().length);
-			System.out.println("File Type:" + multiFile.getContentType());
+			/*System.out.println("File Length:" + multiFile.getBytes().length);
+			System.out.println("File Type:" + multiFile.getContentType());*/
 			String fileName = multiFile.getOriginalFilename();
 			/*  length=fileName .length();*/
-			int length=fileName.length();
-		    int index=fileName.indexOf('.');
-		    String subStr=fileName.substring(index, length);
-		    String str=fileName.substring(0,index);
-		    imageFile= str.concat(strRandom+subStr);
+			
 			byte[] bytes = multiFile.getBytes();
-			File directory = new File(UPLOAD_DIRECTORY);
-			File file = new File(directory.getAbsolutePath() + System.getProperty("file.separator") + imageFile);
-			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
-			stream.write(bytes);
-			stream.close();
+			
+			
+			if(fileName.length()>0)
+			{
+					 oldFile=new File(UPLOAD_DIRECTORY+"/"+oldImage);
+					oldFile.delete();
+					System.out.println(oldFile.getName()+ "is deleted");
+			}
+			if(fileName.equals(""))
+			{
+				 oldImage=imageFile;
+			}
+			else
+			{		
+						int length=fileName.length();
+					    int index=fileName.indexOf('.');
+					    String subStr=fileName.substring(index, length);
+					    String str=fileName.substring(0,index);
+					    imageFile= str.concat(strRandom+subStr);
+					    file = new File(directory.getAbsolutePath() + System.getProperty("file.separator") + imageFile);
+						BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
+						stream.write(bytes);
+						stream.close();
+			}
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return imageFile;
+		
 	}
 	
 	@RequestMapping(value="/view",method=RequestMethod.GET)
@@ -109,6 +154,17 @@ public class CustomerController {
 	{
 		Gson gson=new Gson();
 		CustomerBean bean = new CustomerBean();
+		/*Customer cs=new Customer();
+		String oldImage=cs.getCuploadImage();*/
+		/*System.out.println(oldImage);*/
+		/*Iterator<String> itr=oldImage.iterator();
+		String str[]=new String[10];
+		while(itr.hasNext())
+		{
+			String str1=itr.next();
+			System.out.println(str1);
+		}
+		System.out.println(oldImage);*/
 		Customer customer= service.getById(bId);
 		bean.setbId(customer.getcId());
 		bean.setbName(customer.getcName());
@@ -116,6 +172,8 @@ public class CustomerController {
 		bean.setbDocument(customer.getcDocument());
 		bean.setbAdd(customer.getcAdd());
 		bean.setBuploadImage(customer.getCuploadImage());
+		oldImage=customer.getCuploadImage();
+		System.out.println(oldImage);
 		String jsonInString = gson.toJson(bean);
 		return jsonInString;
 	}
@@ -125,7 +183,6 @@ public class CustomerController {
 		List<CustomerBean> beans = new ArrayList<CustomerBean>();
 		for (Customer std : customers) {
 			customer = new CustomerBean();
-			System.out.println(std.getcId());
 			customer.setbId(std.getcId());
 			customer.setbName(std.getcName());
 			customer.setbGender(std.getcGender());

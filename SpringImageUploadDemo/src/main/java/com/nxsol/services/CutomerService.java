@@ -14,4 +14,10 @@ public interface CutomerService {
 	
 	public Customer getById(int cId);
 	
+	public void updateCutomer(Customer cs,int bId);
+	
+	public void deleteStudent(int bId);
+	
+	public Customer getImageById(int cId);
+	
 }

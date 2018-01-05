@@ -56,8 +56,10 @@
 			</tr>
 			<tr>
 				<!-- <td>Upload Image</td><td><input type="button" value="Upload Image"></td> -->
-				<td><label for="image">Profile Photo</label></td>
-				<td><input name="file" id="filed" type="file" /> <!-- <input
+				<%-- <td><form:label path="buploadImage">Profile Photo</form:label></td>
+				 <td><input name="file" id="buploadImage" type="file"/></td>  --%>
+				 <td><label for="image">Profile Photo</label></td>
+				<td><input name="file" id="filed" type="file" />  <!-- <input
 					type="button" value="Upload" id="btnupload"
 					onclick="customerinfo.image()"> -->
 					
