@@ -29,11 +29,12 @@ import com.nxsol.services.CustomerServiceImpl;
 @Controller
 public class CustomerController {
 
-	/*String imageFile=null;*/
+	/* String imageFile=null; */
 	@Autowired
 	private CustomerServiceImpl service;
 
-	String oldImage=null;
+	String oldImage = null;
+
 	@RequestMapping(value = "/form", method = RequestMethod.GET)
 	public String get(@ModelAttribute("form") CustomerBean customerbean) {
 		return "customerForm";
@@ -41,13 +42,14 @@ public class CustomerController {
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String save(@RequestParam("bName") String bName, @RequestParam("bGender") String bGender,
-			@RequestParam("bDocument") String[] bDocument, @RequestParam("bAdd") String bAdd,@RequestParam("imageFile")String imageFile) {
+			@RequestParam("bDocument") String[] bDocument, @RequestParam("bAdd") String bAdd,
+			@RequestParam("imageFile") String imageFile) {
 		Customer c = new Customer();
 		String doc = "";
 		for (int i = 0; i < bDocument.length; i++) {
 			doc += bDocument[i];
-				doc += ",";
-			
+			doc += ",";
+
 			/* service.save(c); */
 		}
 		c.setcDocument(doc);
@@ -58,16 +60,18 @@ public class CustomerController {
 		service.save(c);
 		return "redirect:form";
 	}
-	@RequestMapping(value="edit",method=RequestMethod.POST)
-	@ResponseBody public String editCustomer(@RequestParam("bId")int bId,@RequestParam("bName") String bName, @RequestParam("bGender") String bGender,
-			@RequestParam("bDocument") String[] bDocument, @RequestParam("bAdd") String bAdd,@RequestParam("imageFile")String imageFile)
-	{
+
+	@RequestMapping(value = "edit", method = RequestMethod.POST)
+	@ResponseBody
+	public String editCustomer(@RequestParam("bId") int bId, @RequestParam("bName") String bName,
+			@RequestParam("bGender") String bGender, @RequestParam("bDocument") String[] bDocument,
+			@RequestParam("bAdd") String bAdd, @RequestParam("imageFile") String imageFile) {
 		String doc1 = "";
 		for (int i = 0; i < bDocument.length; i++) {
 			doc1 += bDocument[i];
-				doc1 += ",";
+			doc1 += ",";
 		}
-		Customer cs=new Customer();
+		Customer cs = new Customer();
 		cs.setcName(bName);
 		cs.setcGender(bGender);
 		cs.setcDocument(doc1);
@@ -76,10 +80,16 @@ public class CustomerController {
 		service.updateCutomer(cs, bId);
 		return "success";
 	}
-	
-	@RequestMapping(value="/delete",method=RequestMethod.POST)
-	@ResponseBody public String delete(@RequestParam("bId")int bId)
-	{
+
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@ResponseBody
+	public String delete(@RequestParam("bId") int bId) {
+		String UPLOAD_DIRECTORY = "C:/Users/ADMIN/git/SpringImageUploadDemoWithChkRad/SpringImageUploadDemo/src/main/webapp/resources/Upload_Image";
+		Customer cs = new Customer();
+		cs = service.getImageById(bId);
+		String deleteFile = cs.getCuploadImage();
+		File deleteImage = new File(UPLOAD_DIRECTORY + "/" + deleteFile);
+		deleteImage.delete();
 		service.deleteStudent(bId);
 		return "success";
 	}
@@ -87,98 +97,94 @@ public class CustomerController {
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	@ResponseBody
 	public String upload(MultipartHttpServletRequest request) throws ServletException, IOException {
-		  String  imageFile = null;
+		String imageFile = null;
 		Random rand = new Random();
 		File oldFile;
-		
-		int random=rand.nextInt(100000);
-		String strRandom=String.valueOf(random);
+
+		int random = rand.nextInt(100000);
+		String strRandom = String.valueOf(random);
 		String UPLOAD_DIRECTORY = "C:/Users/ADMIN/git/SpringImageUploadDemoWithChkRad/SpringImageUploadDemo/src/main/webapp/resources/Upload_Image";
 		Iterator<String> itrator = request.getFileNames();
 		MultipartFile multiFile = request.getFile(itrator.next());
-		
-		/*File directory = new File(UPLOAD_DIRECTORY);*/
+
+		/* File directory = new File(UPLOAD_DIRECTORY); */
 		File file;
 		try {
 			// just to show that we have actually received the file
-			/*System.out.println("File Length:" + multiFile.getBytes().length);
-			System.out.println("File Type:" + multiFile.getContentType());*/
+			/*
+			 * System.out.println("File Length:" + multiFile.getBytes().length);
+			 * System.out.println("File Type:" + multiFile.getContentType());
+			 */
 			String fileName = multiFile.getOriginalFilename();
-			/*  length=fileName .length();*/
-			
+			/* length=fileName .length(); */
+
 			byte[] bytes = multiFile.getBytes();
-			
-			
-			if(fileName.length()>0)
-			{
-					 oldFile=new File(UPLOAD_DIRECTORY+"/"+oldImage);
-					oldFile.delete();
-					System.out.println(oldFile.getName()+ "is deleted");
+
+			if (fileName.length() > 0) {
+				oldFile = new File(UPLOAD_DIRECTORY + "/" + oldImage);
+				oldFile.delete();
+				System.out.println(oldFile.getName() + "is deleted");
 			}
-			if(fileName.equals(""))
-			{
-				imageFile=oldImage;
+			if (fileName.equals("")) {
+				imageFile = oldImage;
+			} else {
+				File directory = new File(UPLOAD_DIRECTORY);
+				int length = fileName.length();
+				int index = fileName.indexOf('.');
+				String subStr = fileName.substring(index, length);
+				String str = fileName.substring(0, index);
+				imageFile = str.concat(strRandom + subStr);
+				file = new File(directory.getAbsolutePath() + System.getProperty("file.separator") + imageFile);
+				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
+				stream.write(bytes);
+				stream.close();
 			}
-			else
-			{		
-						File directory = new File(UPLOAD_DIRECTORY);
-						int length=fileName.length();
-					    int index=fileName.indexOf('.');
-					    String subStr=fileName.substring(index, length);
-					    String str=fileName.substring(0,index);
-					    imageFile= str.concat(strRandom+subStr);
-					    file = new File(directory.getAbsolutePath() + System.getProperty("file.separator") + imageFile);
-						BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
-						stream.write(bytes);
-						stream.close();
-			}
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return imageFile;
-		
+
 	}
-	
-	@RequestMapping(value="/view",method=RequestMethod.GET)
-	@ResponseBody public String view()
-	{
+
+	@RequestMapping(value = "/view", method = RequestMethod.GET)
+	@ResponseBody
+	public String view() {
 		Gson gson = new Gson();
-		List<CustomerBean> cutomerlist=prepareBeanList(service.getAllCutomer());
-		String jsonstring=gson.toJson(cutomerlist);
+		List<CustomerBean> cutomerlist = prepareBeanList(service.getAllCutomer());
+		String jsonstring = gson.toJson(cutomerlist);
 		return jsonstring;
 	}
-	@RequestMapping(value="/get",method=RequestMethod.POST)
-	@ResponseBody public String getById(@RequestParam("id")int bId) 
-	{
-		Gson gson=new Gson();
+
+	@RequestMapping(value = "/get", method = RequestMethod.POST)
+	@ResponseBody
+	public String getById(@RequestParam("id") int bId) {
+		Gson gson = new Gson();
 		CustomerBean bean = new CustomerBean();
-		/*Customer cs=new Customer();
-		String oldImage=cs.getCuploadImage();*/
-		/*System.out.println(oldImage);*/
-		/*Iterator<String> itr=oldImage.iterator();
-		String str[]=new String[10];
-		while(itr.hasNext())
-		{
-			String str1=itr.next();
-			System.out.println(str1);
-		}
-		System.out.println(oldImage);*/
-		Customer customer= service.getById(bId);
+		/*
+		 * Customer cs=new Customer(); String oldImage=cs.getCuploadImage();
+		 */
+		/* System.out.println(oldImage); */
+		/*
+		 * Iterator<String> itr=oldImage.iterator(); String str[]=new
+		 * String[10]; while(itr.hasNext()) { String str1=itr.next();
+		 * System.out.println(str1); } System.out.println(oldImage);
+		 */
+		Customer customer = service.getById(bId);
 		bean.setbId(customer.getcId());
 		bean.setbName(customer.getcName());
 		bean.setbGender(customer.getcGender());
 		bean.setbDocument(customer.getcDocument());
 		bean.setbAdd(customer.getcAdd());
 		bean.setBuploadImage(customer.getCuploadImage());
-		oldImage=customer.getCuploadImage();
+		oldImage = customer.getCuploadImage();
 		System.out.println(oldImage);
 		String jsonInString = gson.toJson(bean);
 		return jsonInString;
 	}
-	
+
 	public List<CustomerBean> prepareBeanList(List<Customer> customers) {
 		CustomerBean customer = null;
 		List<CustomerBean> beans = new ArrayList<CustomerBean>();
