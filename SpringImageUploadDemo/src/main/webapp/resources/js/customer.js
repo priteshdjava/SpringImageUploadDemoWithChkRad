@@ -11,6 +11,11 @@ var customerinfo = {
     },
     edit: function() { 
         //grid edit buttion click event...and set data to form
+    	var button = "";	
+ 		button = "<tr>";
+ 		button += "<td align=justify><input type=button id=button value=Save  onclick=customerinfo.add()></td>";
+ 		button += "</tr>";
+    	$("#button2").replaceWith(button);
     	customerinfo.editimage();
     },
     
@@ -148,11 +153,11 @@ var customerinfo = {
     },
     editimage: function() {
         //image upload  
-    	/*debugger;*/
   	  var files = [];
   	  var form = $('#form')[0];
   	  var oMyForm = new FormData(form);
         oMyForm.append("CustomField","This is some extra field");
+		
        $
           .ajax({
           	/*dataType : 'json',*/
@@ -161,7 +166,7 @@ var customerinfo = {
               type : "POST",
               enctype: 'multipart/form-data',
               cache: false,
-            contentType: false,
+              contentType: false,
               processData: false,
               
               success : function(result) {
@@ -181,6 +186,7 @@ var customerinfo = {
           				alert("success");
           				 customerinfo.set();
           				$("#form")[0].reset();
+          				
           			}
           		});
               },
