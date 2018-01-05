@@ -97,7 +97,7 @@ public class CustomerController {
 		Iterator<String> itrator = request.getFileNames();
 		MultipartFile multiFile = request.getFile(itrator.next());
 		
-		File directory = new File(UPLOAD_DIRECTORY);
+		/*File directory = new File(UPLOAD_DIRECTORY);*/
 		File file;
 		try {
 			// just to show that we have actually received the file
@@ -117,10 +117,11 @@ public class CustomerController {
 			}
 			if(fileName.equals(""))
 			{
-				 oldImage=imageFile;
+				imageFile=oldImage;
 			}
 			else
 			{		
+						File directory = new File(UPLOAD_DIRECTORY);
 						int length=fileName.length();
 					    int index=fileName.indexOf('.');
 					    String subStr=fileName.substring(index, length);
