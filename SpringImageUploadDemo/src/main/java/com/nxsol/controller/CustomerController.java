@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +35,8 @@ public class CustomerController {
 	private CustomerServiceImpl service;
 
 	String oldImage = null;
+	String UPLOAD_DIRECTORY;
+	File directory;
 
 	@RequestMapping(value = "/form", method = RequestMethod.GET)
 	public String get(@ModelAttribute("form") CustomerBean customerbean) {
@@ -61,7 +64,7 @@ public class CustomerController {
 		return "redirect:form";
 	}
 
-	@RequestMapping(value = "edit", method = RequestMethod.POST)
+	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	@ResponseBody
 	public String editCustomer(@RequestParam("bId") int bId, @RequestParam("bName") String bName,
 			@RequestParam("bGender") String bGender, @RequestParam("bDocument") String[] bDocument,
@@ -84,10 +87,12 @@ public class CustomerController {
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public String delete(@RequestParam("bId") int bId) {
-		String UPLOAD_DIRECTORY = "C:/Users/ADMIN/git/SpringImageUploadDemoWithChkRad/SpringImageUploadDemo/src/main/webapp/resources/Upload_Image";
+		/*String UPLOAD_DIRECTORY = request.getRealPath("") + "/resources/Upload_Image/";
+		File directory=new File(UPLOAD_DIRECTORY);*/
 		Customer cs = new Customer();
 		cs = service.getImageById(bId);
 		String deleteFile = cs.getCuploadImage();
+	   File file = new File(directory.getAbsoluteFile() + System.getProperty("file.separator") + deleteFile);
 		File deleteImage = new File(UPLOAD_DIRECTORY + "/" + deleteFile);
 		deleteImage.delete();
 		service.deleteStudent(bId);
@@ -96,17 +101,20 @@ public class CustomerController {
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	@ResponseBody
-	public String upload(MultipartHttpServletRequest request) throws ServletException, IOException {
+	public String upload(MultipartHttpServletRequest request,HttpServletRequest httpReq) throws ServletException, IOException {
 		String imageFile = null;
 		Random rand = new Random();
 		File oldFile;
 
 		int random = rand.nextInt(100000);
 		String strRandom = String.valueOf(random);
-		String UPLOAD_DIRECTORY = "C:/Users/ADMIN/git/SpringImageUploadDemoWithChkRad/SpringImageUploadDemo/src/main/webapp/resources/Upload_Image";
+		System.out.println(httpReq.getContextPath()+"-------"+request.getRealPath("") + "Upload_Image");
+		
 		Iterator<String> itrator = request.getFileNames();
 		MultipartFile multiFile = request.getFile(itrator.next());
-
+		System.out.println("get ral path--------"+request.getRealPath(""));
+		UPLOAD_DIRECTORY = request.getRealPath("") + "/resources/Upload_Image/";//request.getRealPath(httpReq.getContextPath()+"/src/main/webapp/resources/Upload_Image");
+		
 		/* File directory = new File(UPLOAD_DIRECTORY); */
 		File file;
 		try {
@@ -128,13 +136,15 @@ public class CustomerController {
 			if (fileName.equals("")) {
 				imageFile = oldImage;
 			} else {
-				File directory = new File(UPLOAD_DIRECTORY);
+				directory = new File(UPLOAD_DIRECTORY);
 				int length = fileName.length();
 				int index = fileName.indexOf('.');
 				String subStr = fileName.substring(index, length);
 				String str = fileName.substring(0, index);
 				imageFile = str.concat(strRandom + subStr);
-				file = new File(directory.getAbsolutePath() + System.getProperty("file.separator") + imageFile);
+				System.out.println(System.getProperty("file.separator")+"--oh its my msg");
+				//file = new File(directory.getAbsolutePath() + System.getProperty("file.separator") + imageFile);
+				file = new File(directory.getAbsoluteFile() + System.getProperty("file.separator") + imageFile);
 				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
 				stream.write(bytes);
 				stream.close();
