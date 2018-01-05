@@ -136,7 +136,9 @@ public class CustomerController {
 				String subStr = fileName.substring(index, length);
 				String str = fileName.substring(0, index);
 				imageFile = str.concat(strRandom + subStr);
-				file = new File(directory.getAbsolutePath() + System.getProperty("file.separator") + imageFile);
+				System.out.println(System.getProperty("file.separator")+"--oh its my msg");
+				//file = new File(directory.getAbsolutePath() + System.getProperty("file.separator") + imageFile);
+				file = new File(directory + System.getProperty("file.separator") + imageFile);
 				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
 				stream.write(bytes);
 				stream.close();
