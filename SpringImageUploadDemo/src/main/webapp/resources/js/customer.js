@@ -265,4 +265,7 @@ var customerinfo = {
 			}
     	}
 }
+$(document).ready(function() {
+	customerinfo.set();
+});
 
